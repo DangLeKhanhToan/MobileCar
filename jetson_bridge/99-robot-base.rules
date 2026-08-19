@@ -1,0 +1,2 @@
+# Replace SERIAL_SHORT with: udevadm info -a -n /dev/ttyACM0
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{serial}=="SERIAL_SHORT", SYMLINK+="robot_base", GROUP="dialout", MODE="0660"

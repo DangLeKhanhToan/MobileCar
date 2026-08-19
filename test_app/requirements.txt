@@ -1,0 +1,7 @@
+PyQt6>=6.6,<7
+pyserial>=3.5,<4
+opencv-python>=4.9,<5
+numpy>=1.26,<3
+ultralytics>=8.3
+# Install pyrealsense2 separately on supported x86 systems.
+# On Jetson, use the RealSense SDK/librealsense build matching JetPack.

@@ -1,0 +1,17 @@
+[Unit]
+Description=RobotCar RealSense RGB/depth debug server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=robot
+SupplementaryGroups=video
+EnvironmentFile=-/etc/default/robot-car-camera
+WorkingDirectory=/opt/robot-car
+ExecStart=/usr/bin/python3 /opt/robot-car/jetson_camera/camera_server.py --listen ${CAMERA_LISTEN} --port ${CAMERA_PORT} --width ${CAMERA_WIDTH} --height ${CAMERA_HEIGHT} --fps ${CAMERA_FPS}
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

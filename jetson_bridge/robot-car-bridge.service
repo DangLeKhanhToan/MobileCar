@@ -1,0 +1,17 @@
+[Unit]
+Description=RobotCar TCP to Arduino serial bridge
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=robot
+SupplementaryGroups=dialout
+EnvironmentFile=-/etc/default/robot-car-bridge
+WorkingDirectory=/opt/robot-car
+ExecStart=/opt/robot-car/.venv/bin/python /opt/robot-car/jetson_bridge/robot_serial_bridge.py --serial ${ROBOT_SERIAL} --baud ${ROBOT_BAUD} --listen ${ROBOT_LISTEN} --port ${ROBOT_PORT}
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
