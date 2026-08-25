@@ -42,6 +42,10 @@ CAMERA_PORT=8080
 CAMERA_WIDTH=640
 CAMERA_HEIGHT=480
 CAMERA_FPS=15
+CAMERA_OUTPUT_WIDTH=320
+CAMERA_OUTPUT_HEIGHT=240
+CAMERA_PUBLISH_FPS=3
+CAMERA_JPEG_QUALITY=65
 EOF
 install -m 0644 "${SOURCE_DIR}/jetson_camera/robot-car-camera.service" /etc/systemd/system/
 systemctl daemon-reload

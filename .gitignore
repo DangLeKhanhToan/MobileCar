@@ -3,6 +3,15 @@
 
 # Third-party / external code
 SocialWalker/
+socialwalker/
+
+# Local model weights
+yolo11n.pt
+yolov11n.pt
+
+# Python caches
+__pycache__/
+*.py[cod]
 
 # Local scripts
 scripts/local/

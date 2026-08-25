@@ -9,7 +9,7 @@ User=robot
 SupplementaryGroups=video
 EnvironmentFile=-/etc/default/robot-car-camera
 WorkingDirectory=/opt/robot-car
-ExecStart=/usr/bin/python3 /opt/robot-car/jetson_camera/camera_server.py --listen ${CAMERA_LISTEN} --port ${CAMERA_PORT} --width ${CAMERA_WIDTH} --height ${CAMERA_HEIGHT} --fps ${CAMERA_FPS}
+ExecStart=/usr/bin/python3 /opt/robot-car/jetson_camera/camera_server.py --listen ${CAMERA_LISTEN} --port ${CAMERA_PORT} --width ${CAMERA_WIDTH} --height ${CAMERA_HEIGHT} --fps ${CAMERA_FPS} --output-width ${CAMERA_OUTPUT_WIDTH} --output-height ${CAMERA_OUTPUT_HEIGHT} --publish-fps ${CAMERA_PUBLISH_FPS} --jpeg-quality ${CAMERA_JPEG_QUALITY}
 Restart=on-failure
 RestartSec=3
 
