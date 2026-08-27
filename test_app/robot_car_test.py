@@ -21,8 +21,9 @@ from PyQt6.QtWidgets import (
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+SOCIALWALKER_ROOT = PROJECT_ROOT / "SocialWalker"
+if str(SOCIALWALKER_ROOT) not in sys.path:
+    sys.path.insert(0, str(SOCIALWALKER_ROOT))
 
 
 SPEED_STATES = {"0": 0, "4": 100, "6": 155, "7": 180, "8": 200, "9": 230, "q": 255}
@@ -536,7 +537,7 @@ class RobotCarWindow(QMainWindow):
         self.realsense_check = QCheckBox("Intel RealSense RGB-D"); self.realsense_check.setChecked(True)
         self.camera_index = QSpinBox(); self.camera_index.setRange(0, 10)
         self.model_path = QLineEdit("yolo11n.pt")
-        default_checkpoint = PROJECT_ROOT / "socialwalker" / "ckpt_rank.pt"
+        default_checkpoint = SOCIALWALKER_ROOT / "socialwalker" / "ckpt_rank.pt"
         self.socialwalker_checkpoint = QLineEdit(str(default_checkpoint))
         self.confidence = QDoubleSpinBox(); self.confidence.setRange(0.1, 0.95); self.confidence.setValue(0.45)
         self.camera_button = QPushButton("Start camera"); self.camera_button.clicked.connect(self.toggle_camera)

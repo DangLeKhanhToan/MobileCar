@@ -2,8 +2,6 @@
 *.md
 
 # Third-party / external code
-SocialWalker/
-socialwalker/
 
 # Local model weights
 yolo11n.pt
