@@ -14,6 +14,13 @@ if [[ ${EUID} -ne 0 ]]; then
   exit 2
 fi
 
+# Publish the Jetson's hostname as <hostname>.local for Windows/macOS/Linux mDNS clients.
+if ! command -v avahi-daemon >/dev/null 2>&1; then
+  apt-get update
+  apt-get install -y avahi-daemon
+fi
+systemctl enable --now avahi-daemon.service
+
 if [[ -z ${SERIAL_DEVICE} ]]; then
   mapfile -t candidates < <(find /dev -maxdepth 1 \( -name 'ttyACM*' -o -name 'ttyUSB*' \) -print 2>/dev/null | sort)
   if [[ ${#candidates[@]} -ne 1 ]]; then
@@ -72,5 +79,22 @@ systemctl daemon-reload
 systemctl enable robot-car-bridge.service
 systemctl restart robot-car-bridge.service
 
+if command -v ufw >/dev/null 2>&1 && ufw status | grep -q '^Status: active'; then
+  ufw allow 8765/tcp comment 'RobotCar bridge'
+fi
+
+sleep 1
+if ! systemctl is-active --quiet robot-car-bridge.service; then
+  echo "robot-car-bridge failed to start. Recent service log:" >&2
+  journalctl -u robot-car-bridge.service -n 30 --no-pager >&2
+  exit 5
+fi
+if command -v ss >/dev/null 2>&1 && ! ss -ltn | grep -q ':8765 '; then
+  echo "robot-car-bridge is active but TCP port 8765 is not listening." >&2
+  journalctl -u robot-car-bridge.service -n 30 --no-pager >&2
+  exit 6
+fi
+
 echo "Installed robot-car-bridge on TCP port 8765 using ${service_serial}."
+echo "mDNS address: $(hostname).local (Windows may require Bonjour for .local resolution)."
 echo "Next: systemctl status robot-car-bridge && python3 scripts/robot_link_test.py JETSON_IP"

@@ -51,4 +51,19 @@ install -m 0644 "${SOURCE_DIR}/jetson_camera/robot-car-camera.service" /etc/syst
 systemctl daemon-reload
 systemctl enable robot-car-camera.service
 systemctl restart robot-car-camera.service
+
+if command -v ufw >/dev/null 2>&1 && ufw status | grep -q '^Status: active'; then
+  ufw allow 8080/tcp comment 'RobotCar camera'
+fi
+sleep 1
+if ! systemctl is-active --quiet robot-car-camera.service; then
+  echo "robot-car-camera failed to start. Recent service log:" >&2
+  journalctl -u robot-car-camera.service -n 30 --no-pager >&2
+  exit 5
+fi
+if command -v ss >/dev/null 2>&1 && ! ss -ltn | grep -q ':8080 '; then
+  echo "robot-car-camera is active but TCP port 8080 is not listening." >&2
+  journalctl -u robot-car-camera.service -n 30 --no-pager >&2
+  exit 6
+fi
 echo "Camera server installed at http://JETSON_IP:8080/status"

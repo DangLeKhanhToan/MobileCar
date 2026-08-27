@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Windows and editor metadata
+Thumbs.db
+Desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# Generated datasets and evaluation plots (the training JSONL can exceed GitHub's 100 MB limit)
+socialwalker/out_train*/
+socialwalker/plots_test/

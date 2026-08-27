@@ -631,7 +631,30 @@ class RobotCarWindow(QMainWindow):
             self.send("X", force=True); self.set_speed(self.speed_state); self.stop_motion()
             QTimer.singleShot(700, self.retry_handshake)
         except (serial.SerialException, OSError) as exc:
-            QMessageBox.critical(self, "Connection error", str(exc)); self.serial_port = None; self.tcp_socket = None
+            host = self.jetson_host.text().strip()
+            port = self.jetson_port.value()
+            if isinstance(exc, socket.gaierror):
+                detail = (
+                    f"Cannot resolve '{host}'. Enter the Jetson's IPv4 address, or enable Avahi on the "
+                    "Jetson and Bonjour/mDNS on Windows."
+                )
+            elif isinstance(exc, ConnectionRefusedError):
+                detail = (
+                    f"{host} is reachable, but TCP port {port} refused the connection. On the Jetson run:\n\n"
+                    "sudo systemctl restart robot-car-bridge\n"
+                    "sudo systemctl status robot-car-bridge --no-pager\n"
+                    f"sudo ss -ltnp | grep :{port}\n\n"
+                    "If the service failed, reconnect the Arduino and rerun sudo ./scripts/setup_jetson.sh."
+                )
+            elif isinstance(exc, TimeoutError):
+                detail = (
+                    f"Timed out connecting to {host}:{port}. Confirm both machines are on the same network "
+                    "and allow TCP port 8765 through the Jetson firewall."
+                )
+            else:
+                detail = str(exc)
+            QMessageBox.critical(self, "Connection error", detail)
+            self.serial_port = None; self.tcp_socket = None
 
     def disconnect_serial(self):
         port, self.serial_port = self.serial_port, None
